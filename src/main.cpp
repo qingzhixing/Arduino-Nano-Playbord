@@ -4,27 +4,45 @@
 #include "SSD1315_screen.h"
 #include "encoder.h"
 
-static U8G2 u8g2;
+bool need_update_screen = false;
 
 void setup()
 {
 	board_led_init();
 	ssd1315_init();
+	Serial.begin(9600);
 	encoder_init();
-	u8g2 = get_u8g2();
-	// Serial.begin(9600);
+
+	Serial.println("Hello World!");
+	need_update_screen = true;
+	on_encoder_key_pressed([]()
+						   { Serial.println("Key pressed!"); });
+	on_encoder_turned([](bool direction)
+					  {
+							if (direction)
+							{
+								Serial.println("Clockwise!");
+							}
+							else
+							{
+								Serial.println("Counterclockwise!");
+							} });
+	on_encoder_key_released([]()
+							{ Serial.println("Key released!"); });
 }
 
 void loop()
 {
+	board_led_on();
 	encoder_update();
 
-	u8g2.clearBuffer();
-	u8g2.drawStr(0, 10, "Hello World!");
-	u8g2.sendBuffer();
+	if (need_update_screen)
+	{
+		need_update_screen = false;
+		u8g2_screen.clearBuffer();
+		u8g2_screen.drawStr(0, 10, "Hello World!");
+		u8g2_screen.sendBuffer();
+	}
 
-	board_led_on();
-	delay(200);
 	board_led_off();
-	delay(200);
 }

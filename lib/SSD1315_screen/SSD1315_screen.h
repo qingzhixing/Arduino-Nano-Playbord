@@ -7,6 +7,6 @@
 
 void ssd1315_init();
 
-U8G2 get_u8g2();
+extern U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2_screen;
 
 #endif // !SSD1315_SCREEN_H
