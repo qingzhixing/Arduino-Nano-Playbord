@@ -12,7 +12,7 @@ void setup()
 	ssd1315_init();
 	encoder_init();
 	u8g2 = get_u8g2();
-	Serial.begin(9600);
+	// Serial.begin(9600);
 }
 
 void loop()
