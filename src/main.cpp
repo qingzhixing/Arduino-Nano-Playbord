@@ -26,14 +26,11 @@ void setup()
 							if (direction)
 							{
 								Serial.println("Clockwise!");
-								buzzer_value_add(-1);
 							}
 							else
 							{
 								Serial.println("Counterclockwise!");
-								buzzer_value_add(1);
-							}
-							Serial.println(buzzer_get_value()); });
+							} });
 	on_encoder_key_released([]()
 							{ Serial.println("Key released!"); });
 }
@@ -42,7 +39,6 @@ void loop()
 {
 	board_led_on();
 	encoder_update();
-	buzzer_loop();
 
 	if (need_update_screen)
 	{
