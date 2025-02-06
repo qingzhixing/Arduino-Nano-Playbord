@@ -4,6 +4,7 @@
 #include "SSD1315_screen.h"
 #include "encoder.h"
 #include "buzzer.h"
+#include "speaker.h"
 
 bool need_update_screen = false;
 
@@ -17,19 +18,24 @@ void setup()
 	Serial.println("Hello World!");
 	need_update_screen = true;
 	buzzer_init();
+	speaker_init();
+
 	on_encoder_key_pressed([]()
 						   { 
 								Serial.println("Key pressed!"); 
-								buzzer_toggle(); });
+								speaker_toggle(); 
+								Serial.printf("Speaker on state: %s\n", speaker_is_on() ? "ON" : "OFF"); });
 	on_encoder_turned([](bool direction)
 					  {
 							if (direction)
 							{
 								Serial.println("Clockwise!");
+								speaker_set_frequency(speaker_get_frequency() + 50);
 							}
 							else
 							{
 								Serial.println("Counterclockwise!");
+								speaker_set_frequency(speaker_get_frequency() - 50);
 							} });
 	on_encoder_key_released([]()
 							{ Serial.println("Key released!"); });
@@ -37,7 +43,7 @@ void setup()
 
 void loop()
 {
-	board_led_on();
+	board_led_off();
 	encoder_update();
 
 	if (need_update_screen)
@@ -48,5 +54,5 @@ void loop()
 		u8g2_screen.sendBuffer();
 	}
 
-	board_led_off();
+	board_led_on();
 }
